@@ -1,0 +1,80 @@
+{"level":"error","message":"Sun Nov 20 2022 08:39:41 GMT-0800 (Pacific Standard Time)-{\"statusCode\":400}"}
+{"level":"error","message":"Sun Nov 20 2022 08:40:37 GMT-0800 (Pacific Standard Time)-400\t[object Object]"}
+{"level":"error","message":"Sun Nov 20 2022 08:41:15 GMT-0800 (Pacific Standard Time)-400-[object Object]"}
+{"level":"error","message":"Sun Nov 20 2022 08:41:43 GMT-0800 (Pacific Standard Time)-400-[object Object]"}
+{"level":"error","message":"Sun Nov 20 2022 08:42:53 GMT-0800 (Pacific Standard Time)-400-email is exist"}
+{"level":"error","message":"status: 400 - message: email is exist - date: Sun Nov 20 2022 08:44:23 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to create user - date: Sun Nov 20 2022 09:02:55 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to create user - date: Sun Nov 20 2022 09:03:49 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to create user - date: Sun Nov 20 2022 09:04:17 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: email is exist - date: Sun Nov 20 2022 09:05:57 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to create user - date: Sun Nov 20 2022 09:06:12 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to create user - date: Sun Nov 20 2022 09:06:14 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to create user - date: Sun Nov 20 2022 09:07:16 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to create user - date: Sun Nov 20 2022 09:07:38 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Sun Nov 20 2022 09:51:02 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: User not found! - date: Sun Nov 20 2022 09:57:08 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: invalid expiresIn option for string payload - date: Sun Nov 20 2022 09:58:12 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: invalid expiresIn option for string payload - date: Sun Nov 20 2022 10:01:02 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: invalid expiresIn option for string payload - date: Sun Nov 20 2022 10:02:17 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: refreshToken is not defined - date: Sun Nov 20 2022 10:02:51 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: User not found! - date: Sun Nov 20 2022 10:24:20 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: email is exist - date: Sat Dec 03 2022 21:55:59 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: email is exist - date: Sat Dec 03 2022 22:54:59 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: email is exist - date: Sun Dec 04 2022 01:04:57 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 04:52:00 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 04:53:25 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 04:53:50 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 21:08:04 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 21:08:28 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 21:09:23 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 21:09:46 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 21:10:17 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Mon Dec 19 2022 21:10:46 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: User not found! - date: Sat Jan 28 2023 22:38:49 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Sat Jan 28 2023 22:42:51 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: existingUser is not defined - date: Sat Jan 28 2023 22:44:11 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: existingUser is not defined - date: Sat Jan 28 2023 22:44:40 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Cannot create field 'User' in element {roles: [ 2156 ]} - date: Sat Jan 28 2023 22:50:18 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Cannot create field 'User' in element {roles: [ 2156 ]} - date: Sat Jan 28 2023 22:52:03 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Sat Jan 28 2023 23:23:26 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: User not found! - date: Sat Jan 28 2023 23:28:16 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: User not found! - date: Sun Jan 29 2023 00:53:57 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: User not found! - date: Sun Jan 29 2023 00:54:25 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: User not found! - date: Sun Jan 29 2023 01:04:55 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: User not found! - date: Sun Jan 29 2023 01:05:43 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Sun Jan 29 2023 01:09:37 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:08:26 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:08:37 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:17:15 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:27:15 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:27:22 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:28:57 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:29:51 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:30:40 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Mon Jan 30 2023 23:30:45 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code expired! - date: Mon Jan 30 2023 23:31:14 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code expired! - date: Mon Jan 30 2023 23:35:40 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Tue Jan 31 2023 00:04:08 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: OTP Code is wrong! - date: Tue Jan 31 2023 00:04:19 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: User not found! - date: Tue Jan 31 2023 01:58:30 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: null - message: Country not found. - date: Wed Feb 01 2023 07:37:28 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: null - message: Country not found. - date: Wed Feb 01 2023 07:38:41 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: null - message: State not found. - date: Wed Feb 01 2023 07:44:36 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: null - message: State not found. - date: Wed Feb 01 2023 07:45:38 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: null - message: State not found. - date: Wed Feb 01 2023 07:46:19 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: null - message: State not found. - date: Wed Feb 01 2023 07:47:08 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: State not found. - date: Wed Feb 01 2023 07:47:56 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: State not found. - date: Wed Feb 01 2023 07:50:35 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 404 - message: State not found. - date: Wed Feb 01 2023 07:51:09 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: State not found. - date: Wed Feb 01 2023 07:53:05 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: State not found. - date: Wed Feb 01 2023 08:28:55 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: State not found. - date: Wed Feb 01 2023 08:32:45 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: City not found. - date: Wed Feb 01 2023 08:59:38 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: City not found. - date: Wed Feb 01 2023 09:04:55 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: City not found. - date: Wed Feb 01 2023 09:09:38 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: City not found. - date: Wed Feb 01 2023 09:10:27 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: City not found. - date: Wed Feb 01 2023 09:11:20 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: City not found. - date: Wed Feb 01 2023 09:11:49 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: City not found. - date: Wed Feb 01 2023 09:12:07 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Data Not Found! - date: Wed Feb 01 2023 09:24:02 GMT-0800 (Pacific Standard Time)"}
