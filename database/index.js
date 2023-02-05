@@ -8,4 +8,7 @@ module.exports = {
   CountryRepository: require("./repository/country-repository"),
   StateRepository: require("./repository/state-repository"),
   CityRepository: require("./repository/city-repository"),
+  CategoryRepository: require("./repository/category-repository"),
+  ActivityRepository: require("./repository/activity-repository"),
+  UnitOfMeasurementRepository: require("./repository/unit-of-measurement-repository"),
 };

@@ -8,4 +8,6 @@ module.exports = {
   country: require("./country"),
   state: require("./state"),
   city: require("./city"),
+  category: require("./category"),
+  upload: require("./upload"),
 };

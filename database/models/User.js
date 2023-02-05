@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const moment = require("moment");
 
 const Schema = mongoose.Schema;
 
@@ -12,6 +11,10 @@ const UserSchema = new Schema(
     last_name: {
       type: String,
       required: [true, "Please enter last name"],
+    },
+    username: {
+      type: String,
+      unique: true,
     },
     phone: {
       type: String,
@@ -40,23 +43,28 @@ const UserSchema = new Schema(
     address: {
       type: String,
     },
-    roles: {
-      User: {
-        type: Number,
-        default: 2001,
-      },
+    role: {
+      type: String,
+      enum: ["admin", "operator", "manager", "technician"],
+      default: "operator",
     },
 
     bio: {
       type: String,
+      maxLength: 1000,
     },
-    warehouse: [
-      {
-        product: { type: Schema.Types.ObjectId, ref: "product" },
-        unit: { type: String },
-        Quantity: { type: Number },
+    warehouse: {
+      name: {
+        type: String,
       },
-    ],
+      products: [
+        {
+          product: { type: Schema.Types.ObjectId, ref: "product" },
+          unit: { type: String },
+          Quantity: { type: Number },
+        },
+      ],
+    },
     projects: [
       {
         project: { type: Schema.Types.ObjectId, ref: "project" },
@@ -75,11 +83,18 @@ const UserSchema = new Schema(
         type: String,
       },
     },
-    personal_code: String,
-    refreshToken: String,
-    salt: String,
+    personal_code: {
+      type: String,
+    },
+    refreshToken: {
+      type: String,
+    },
+    salt: {
+      type: String,
+    },
   },
   {
+    versionKey: false,
     toJSON: {
       transform(doc, ret) {
         delete ret.password;

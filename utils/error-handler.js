@@ -1,6 +1,7 @@
 const { createLogger, transports } = require("winston");
 const { Response } = require(".");
 const { AppError } = require("./app-errors");
+const Sentry = require("@sentry/node");
 
 const LogErrors = createLogger({
   transports: [
@@ -30,6 +31,7 @@ class ErrorLogger {
 }
 
 const ErrorHandler = async (err, req, res, next) => {
+  Sentry.captureException(err);
   const errorLogger = new ErrorLogger();
 
   process.on("uncaughtException", (reason, promise) => {
@@ -55,7 +57,7 @@ const ErrorHandler = async (err, req, res, next) => {
         err.statusCode
       );
     }
-    return Response(res, "Something went wrong", err);
+    return Response(res, "Something went wrong", null, err.message, 500);
   }
 };
 

@@ -1,23 +1,45 @@
-const { WarehouseRepository, UserRepository } = require("../database");
+const {
+  WarehouseRepository,
+  UserRepository,
+  CountryRepository,
+} = require("../database");
 const { APIError, CustomError } = require("../utils/app-errors");
 const { FormateData } = require("../utils");
 const { WarehouseModel } = require("../database/models");
-const errorMessages = require("../config/errorMessages");
+const errorMessages = require("../config/languages/errorMessages-en");
 
 // All Business Logic will be here
 class WarehouseService {
   constructor() {
     this.repository = new WarehouseRepository();
+    this.countryRepository = new CountryRepository();
   }
 
-  async CreateWarehouse(warehouseInputs) {
+  async CreateWarehouse(inputs) {
     try {
-      const warehouseResult = await this.repository.CreateWarehouse(
-        warehouseInputs
+      const { location } = inputs;
+      // Check country is exist
+
+      const existingCountry = await this.countryRepository.GetCountryById(
+        location.country
       );
-      return FormateData(warehouseResult);
+      if (!existingCountry)
+        throw new CustomError(errorMessages.COUNTRY_NOT_FOUND);
+
+      // Check state is exist
+
+      const existingState = existingCountry.states.id(location.state);
+      if (!existingState) throw new CustomError(errorMessages.STATE_NOT_FOUND);
+
+      // Check city is exist
+      const cityExist = existingState.cities.id(location.city);
+      if (!cityExist) throw new CustomError(errorMessages.CITY_NOT_FOUND);
+
+      const warehouseResult = await this.repository.CreateWarehouse(inputs);
+
+      return warehouseResult;
     } catch (err) {
-      throw new APIError("Data Not Found", err);
+      throw new CustomError(err.message, 500);
     }
   }
 
@@ -53,9 +75,26 @@ class WarehouseService {
     return FormateData(warehouseResult);
   }
 
-  async UpdateWarehouseById(warehouseId, inputs) {}
+  async UpdateWarehouseById(warehouseId, inputs) {
+    // Check warehouse is exist or not
+    const warehouseIsExist = await this.GetWarehouseById(warehouseId);
+    if (!warehouseIsExist)
+      throw new CustomError(errorMessages.WAREHOUSE_NOT_FOUND, 404);
+
+    return await this.repository.UpadteWarehouse(warehouseId, inputs);
+  }
 
   async GetWarehouseByAddress() {}
+
+  async DeleteWarehouseById(warehouseId) {
+    // Check warehouse is exist or not
+
+    const warehouseIsExist = await this.GetWarehouseById(warehouseId);
+    if (!warehouseIsExist)
+      throw new CustomError(errorMessages.WAREHOUSE_NOT_FOUND, 404);
+
+    return await this.repository.DeleteWarehouse(warehouseId);
+  }
 }
 
 module.exports = WarehouseService;

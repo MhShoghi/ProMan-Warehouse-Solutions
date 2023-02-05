@@ -3,15 +3,42 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ProductSchema = new Schema({
-  name: String,
-  description: String,
-  banner: String,
-  type: String,
-  unit: Number,
-  available: Boolean,
+  name: {
+    type: String,
+    required: true,
+    minLength: 2,
+    maxLength: 100,
+    trim: true,
+  },
+  description: {
+    type: String,
+    maxLength: 500,
+    trim: true,
+  },
+
+  unit: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "unit",
+  },
+  category: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: "category",
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+    enum: ["available", "outOfStock", "discontinued"],
+    default: "available",
+  },
   supplier: {
-    type: Schema.Types.ObjectId,
+    type: mongoose.SchemaTypes.ObjectId,
     ref: "supplier",
+    default: null,
+  },
+  photo: {
+    type: String,
+    trim: true,
   },
 });
 

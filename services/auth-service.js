@@ -13,6 +13,7 @@ const {
   GenerateOTP,
   CheckInputIsEmailOrPersonalCode,
   CheckTimeDiff,
+  JWTPayload,
 } = require("../utils");
 const UserService = require("./user-service");
 const Email = require("../utils/Email");
@@ -38,15 +39,12 @@ class AuthService {
       );
 
       if (validPassword) {
-        const accessToken = await GenerateAccessToken({
-          UserInfo: {
-            username: existingUser.username,
-            // roles: existingUser.roles,
-          },
-        });
-        const refreshToken = await GenerateRefreshToken({
-          username: existingUser.username,
-        });
+        const accessToken = await GenerateAccessToken(
+          JWTPayload(existingUser, "access")
+        );
+        const refreshToken = await GenerateRefreshToken(
+          JWTPayload(existingUser, "refresh")
+        );
 
         // // Saving refreshToken with current user
         this.repository.AddRefreshTokenToUser(existingUser.email, refreshToken);

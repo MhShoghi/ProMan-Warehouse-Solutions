@@ -1,4 +1,4 @@
-const errorMessages = require("../config/errorMessages");
+const errorMessages = require("../config/languages/errorMessages-en");
 const { CountryRepository, StateRepository } = require("../database");
 const { StateModel, CityModel } = require("../database/models");
 const { FormateData } = require("../utils");

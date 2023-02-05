@@ -7,4 +7,7 @@ module.exports = {
   StateModel: require("./Country").StateModel,
   CityModel: require("./Country").CityModel,
   SupplierModel: require("./Supplier"),
+  CategoryModel: require("./Category"),
+  ActivityModel: require("./Activity"),
+  UnitOfMeasurement: require("./UnitOfMeasurement"),
 };

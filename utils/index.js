@@ -1,7 +1,9 @@
+// External libraries
 const bcrypt = require("bcrypt");
-const { differenceInSeconds } = require("date-fns");
 const jwt = require("jsonwebtoken");
+const { differenceInSeconds } = require("date-fns");
 
+// Internal libraries
 const {
   APP_SECRET,
   ACCESS_TOKEN_EXPIRE_TIME,
@@ -10,6 +12,7 @@ const {
   REFRESH_TOKEN_SECRET,
   COOKIE_MAX_AGE,
 } = require("../config");
+const { CustomError } = require("./app-errors");
 
 // Utility Functions
 module.exports.GenerateSalt = async () => {
@@ -30,33 +33,45 @@ module.exports.ValidatePassword = async (
   );
 };
 
-// FIXME: should be fixed
-module.exports.GenerateSignature = async (payload) => {
-  return await jwt.sign(payload, APP_SECRET, { expiresIn: "1d" });
-};
-
+// FIXME: fix the validator
 module.exports.ValidateSignature = async (req) => {
-  const signature = req.get("Authorization");
+  const signature = req.get("Authorization") || req.headers.authorization;
 
-  console.log(signature);
-
-  if (signature) {
-    const payload = await jwt.verify(signature.split(" ")[1], APP_SECRET);
-    req.user = payload;
-    return true;
+  if (!signature) {
+    throw new CustomError("No authorization header found", 401);
   }
+
+  jwt.verify(
+    signature.split(" ")[1],
+    process.env.ACCESS_TOKEN_SECRET,
+    (err, user) => {
+      if (err) {
+        if (err instanceof jwt.TokenExpiredError) {
+          throw new CustomError("Token expired", 401);
+          // return res.status(401).json({ message: "Token expired" });
+        }
+
+        throw new CustomError("Invalid token", 401);
+        // return res.status(401).json({ message: "Invalid token" });
+      }
+
+      req.user = user;
+
+      return true;
+    }
+  );
 
   return false;
 };
 
 module.exports.GenerateAccessToken = async (payload) => {
-  return await jwt.sign(payload, ACCESS_TOKEN_SECRET, {
+  return jwt.sign(payload, ACCESS_TOKEN_SECRET, {
     expiresIn: ACCESS_TOKEN_EXPIRE_TIME,
   });
 };
 
 module.exports.GenerateRefreshToken = async (payload) => {
-  return await jwt.sign(payload, REFRESH_TOKEN_SECRET, {
+  return jwt.sign(payload, REFRESH_TOKEN_SECRET, {
     expiresIn: REFRESH_TOKEN_EXPIRE_TIME,
   });
 };
@@ -118,4 +133,72 @@ module.exports.Response = (
     ...(data && { data }),
     ...(error && { error }),
   });
+};
+
+module.exports.GetFilters = (limit, page) => {
+  const startIndex = (page - 1) * 10;
+  const endIndex = page * limit;
+
+  return { limit, page, startIndex, endIndex };
+};
+
+/** Create pagination object based on total count and filters
+ * @param {*} param0
+ * @param {*} total
+ * @returns
+ */
+module.exports.GetPagination = (
+  { page, limit, startIndex, endIndex },
+  total
+) => {
+  const pagination = {};
+
+  if (endIndex < total) {
+    pagination.next = {
+      page: page + 1,
+      limit,
+    };
+  }
+
+  if (startIndex > 0) {
+    pagination.prev = {
+      page: page - 1,
+      limit,
+    };
+  }
+
+  return pagination;
+};
+
+/** Select Field
+ * @param {*} fields
+ * @returns
+ */
+module.exports.SelectField = (fields = []) => {
+  let selectString = "";
+
+  console.log(typeof fields);
+  fields.forEach((key, i) => {
+    let str = "-" + key + " ";
+    selectString += str;
+  });
+
+  return selectString.trim();
+};
+
+/** Generate JWT Payload based on type (refersh or access)
+ * @param {*} user
+ * @param {*} type
+ * @returns
+ */
+module.exports.JWTPayload = (user, type) => {
+  console.log(user);
+
+  const role = type === "access" ? { role: user.role } : null;
+  const email = type === "access" ? { email: user.email } : null;
+  return {
+    id: user._id,
+    ...(role && role),
+    ...(email && email),
+  };
 };

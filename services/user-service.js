@@ -1,7 +1,6 @@
-const errorMessages = require("../config/errorMessages");
-const { UserRepository } = require("../database");
+const errorMessages = require("../config/languages/errorMessages-en");
+const { UserRepository, ActivityRepository } = require("../database");
 const {
-  FormateData,
   GenerateSalt,
   GeneratePassword,
   ValidatePassword,
@@ -17,6 +16,7 @@ const {
 class UserService {
   constructor() {
     this.repository = new UserRepository();
+    this.activityRepository = new ActivityRepository();
   }
 
   async CreateUser(userInputs) {
@@ -42,16 +42,15 @@ class UserService {
       salt,
     });
 
-    return FormateData(userResult);
+    return userResult;
 
     // TODO: Send Email To User
 
     // TODO: Send SMS To User
   }
 
-  async GetAllUsers() {
-    const usersResult = await this.repository.GetUsers();
-    return FormateData(usersResult);
+  async GetAllUsers(filters) {
+    return await this.repository.GetUsers(filters);
   }
 
   async GetPhoneNumberByPersonalCode(personalCode) {
@@ -147,6 +146,26 @@ class UserService {
   async ChangePhoneNumber(newPhoneNumber) {}
 
   async ChangeProfilePhoto() {}
+
+  async UserActivities(userId) {
+    return await this.activityRepository.GetActivity(userId);
+  }
+
+  async UpdateUserById(userId, inputs) {
+    try {
+      const updatedUser = await this.repository.UpdateUser(userId, inputs);
+
+      // TODO: Send Email to Updated user email
+
+      return updatedUser;
+    } catch (err) {
+      throw new CustomError(
+        errorMessages.UNABLE_TO_UPDATE("user"),
+        500,
+        err.message
+      );
+    }
+  }
 }
 
 module.exports = UserService;

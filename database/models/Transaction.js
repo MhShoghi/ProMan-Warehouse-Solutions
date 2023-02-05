@@ -1,27 +1,54 @@
 const mongoose = require("mongoose");
+const { TRANSFER_STATUS } = require("../../config/constants");
 
 const Schema = mongoose.Schema;
 
-const TransactionSchema = new Schema(
+const TransferSchema = new Schema(
   {
-    amount: Number,
-    status: String,
-    txnId: String,
+    transferNumber: {
+      type: Number,
+      unique: true,
+      index: true,
+      default: 1,
+    },
+    fromWarehouse: {
+      type: mongoose.SchemaTypes.ObjectId,
+    },
+    toWarehouse: {
+      type: mongoose.SchemaTypes.ObjectId,
+    },
+    quantity: {
+      value: {
+        type: Number,
+        required: true,
+      },
+      unit: { type: String },
+    },
+    status: {
+      type: String,
+      enum: [
+        TRANSFER_STATUS.PENDING,
+        TRANSFER_STATUS.APPROVED,
+        TRANSFER_STATUS.EXECUTED,
+        TRANSFER_STATUS.REJECTED,
+      ],
+      default: TRANSFER_STATUS.PENDING,
+    },
     items: [
       {
-        product: { type: Schema.Types.ObjectId, ref: "product" },
-        unit: { type: Number },
+        type: Schema.Types.ObjectId,
+        ref: "product",
       },
     ],
   },
   {
-    toJSON: {
-      transform(doc, ret) {
-        delete ret.__v;
-      },
-    },
+    versionKey: false,
+    collection: "transfers",
     timestamps: true,
+    autoIndex: false,
   }
 );
 
-module.exports = mongoose.model("transaction", TransactionSchema);
+TransferSchema.pre("save", function () {});
+
+module.exports = mongoose.model("transfer", TransferSchema);

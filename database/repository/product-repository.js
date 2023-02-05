@@ -1,37 +1,35 @@
-const { APIError } = require("../../utils/app-errors");
+const { APIError, CustomError } = require("../../utils/app-errors");
 const { ProductModel } = require("../models");
 
 class ProductRepository {
-  async CreateProduct({
-    name,
-    description,
-    type,
-    unit,
-    available,
-    supplier,
-    banner,
-  }) {
+  async CreateProduct(product) {
     try {
-      const product = new ProductModel({
-        name,
-        description,
-        type,
-        unit,
-        available,
-        supplier,
-        banner,
+      const savedProduct = new ProductModel({
+        name: product.name,
+        description: product.description,
+        unit: product.unit,
+        category: product.category,
+        status: product.status ?? false,
+        supplier: product.supplier,
+        photo: product.photo,
       });
 
-      const productResult = await product.save();
+      const productResult = await savedProduct.save();
       return productResult;
     } catch (err) {
-      throw APIError("Unable to create Product");
+      throw new CustomError("Unable to create Product");
     }
   }
 
-  async GetProducts() {
+  async GetProducts(filter) {
+    console.log(filter);
     try {
-      return await ProductModel.find();
+      const products = await ProductModel.find()
+        .limit(filter.limit)
+        .skip(filter.startIndex);
+      const total = await ProductModel.countDocuments();
+
+      return { products, total };
     } catch (err) {
       throw APIError("Unable to get Products");
     }

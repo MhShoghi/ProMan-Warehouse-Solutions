@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { WAREHOUSE_STATUS } = require("../../config/constants");
+const Product = require("./Product");
 const Schema = mongoose.Schema;
 
 const WarehouseSchema = new Schema(
@@ -12,8 +14,13 @@ const WarehouseSchema = new Schema(
     },
     location: {
       address: { type: String },
-      city: { type: String },
-      state: { type: String },
+      country: { type: mongoose.SchemaTypes.ObjectId, required: true },
+      state: {
+        type: mongoose.SchemaTypes.ObjectId,
+        required: true,
+      },
+      city: { type: mongoose.SchemaTypes.ObjectId, required: true },
+
       zipcode: { type: String },
       latitude: { type: String },
       longitude: { type: String },
@@ -36,14 +43,22 @@ const WarehouseSchema = new Schema(
       type: String,
     },
     manager: {
-      type: String,
+      name: { type: String },
+      phone: { type: String },
+      email: { type: String },
     },
     unique_id: {
       type: String,
     },
     status: {
-      type: Boolean,
-      default: 0,
+      type: String,
+      enum: [
+        WAREHOUSE_STATUS.ACTIVE,
+        WAREHOUSE_STATUS.INACTIVE,
+        WAREHOUSE_STATUS.OUT_SERVICE,
+        WAREHOUSE_STATUS.UNDER_MAINTENANCE,
+      ],
+      default: WAREHOUSE_STATUS.ACTIVE,
     },
     created_by: {
       type: Schema.Types.ObjectId,
@@ -51,6 +66,7 @@ const WarehouseSchema = new Schema(
     },
   },
   {
+    versionKey: false,
     toJSON: {
       transform(doc, ret) {
         delete ret.password;

@@ -1,3 +1,4 @@
+const { errorMessages } = require("../../config/languages");
 const { APIError, CustomError } = require("../../utils/app-errors");
 const { SupplierModel } = require("../models");
 
@@ -19,11 +20,19 @@ class SupplierRepository {
   }
 
   async FindSupplierById(supplierId) {
-    return await SupplierModel.findById(supplierId);
+    try {
+      return await SupplierModel.findById(supplierId);
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_GET("supplier"));
+    }
   }
 
-  async FindSupplierByName(supplierName) {
-    return await SupplierModel.find({ name: supplierName });
+  async FindSupplier(key, value) {
+    try {
+      return await SupplierModel.find({ [key]: value });
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_GET("supplier"));
+    }
   }
 
   async Suppliers(filters) {
@@ -46,7 +55,23 @@ class SupplierRepository {
         new: true,
       });
     } catch (err) {
-      throw APIError("Unable to update supplier");
+      throw new CustomError(errorMessages.UNABLE_TO_UPDATE("supplier"));
+    }
+  }
+
+  async DeleteSupplierById(supplierId) {
+    try {
+      await SupplierModel.findByIdAndDelete(supplierId);
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_DELETE("supplier"));
+    }
+  }
+
+  async FindSupplierByName(query) {
+    try {
+      return await SupplierModel.find({ name: new RegExp(query, "i") });
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_GET("supplier"));
     }
   }
 }

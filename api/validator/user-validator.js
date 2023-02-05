@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 const ValidateRequest = require("../middlewares/validate-request");
 
-module.exports.registerUserValidator = [
+const registerUserValidator = [
   body("first_name").notEmpty().isString(),
   body("last_name").notEmpty().isString(),
   body("username", "Should choose the username").isString(),
@@ -15,3 +15,5 @@ module.exports.registerUserValidator = [
     ValidateRequest(req, res, next);
   },
 ];
+
+module.exports = { registerUserValidator };

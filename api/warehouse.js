@@ -1,10 +1,8 @@
 const WarehouseService = require("../services/warehouse-service");
-const ValidateRequest = require("./middlewares/validate-request");
-const { body } = require("express-validator");
-const {
-  createWarehouseValidation,
-} = require("./validator/warehouse-validator");
-const router = require("express").Router();
+const { Response } = require("../utils");
+const auth = require("../api/middlewares/auth");
+
+const { WarehouseValidator } = require("./validator");
 
 /**
  * /warehouse POST create warehouse
@@ -18,14 +16,18 @@ module.exports = (app) => {
   const Service = new WarehouseService();
 
   // Create new warehouse [admin, operator]
-  app.post("/warehouses", createWarehouseValidation, async (req, res, next) => {
-    try {
-      const { data } = await Service.CreateWarehouse(req.body);
-      return res.json(data);
-    } catch (err) {
-      next(err);
+  app.post(
+    "/warehouses",
+    WarehouseValidator.createWarehouseValidation,
+    async (req, res, next) => {
+      try {
+        const warehouse = await Service.CreateWarehouse(req.body);
+        Response(res, "Create warehouse successful", warehouse, null, 201);
+      } catch (err) {
+        next(err);
+      }
     }
-  });
+  );
 
   // Get all warehouses
   app.get("/warehouses", async (req, res, next) => {
@@ -88,10 +90,43 @@ module.exports = (app) => {
   });
 
   // Update a warehouse
-  app.patch("/warehouses/:warehouseId", (req, res, next) => {
-    const warehouseId = req.params.warehouseId;
-  });
+  app.put(
+    "/warehouses/:warehouseId",
+
+    async (req, res, next) => {
+      const warehouseId = req.params.warehouseId;
+
+      try {
+        const warehouse = await Service.UpdateWarehouseById(
+          warehouseId,
+          req.body
+        );
+
+        Response(res, "Update warehouse", warehouse, null, 200);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
 
   // Delete a warehouse by id
-  app.delete("/warehouses/:warehouseId", (req, res, next) => {});
+  app.delete("/warehouses/:warehouseId", auth, async (req, res, next) => {
+    const warehouseId = req.params.warehouseId;
+
+    try {
+      const deletedWarehouse = await Service.DeleteWarehouseById(warehouseId);
+
+      Response(
+        res,
+        "Delete warehouse successfully",
+        {
+          _id: deletedWarehouse._id,
+          name: deletedWarehouse.name,
+        },
+        200
+      );
+    } catch (err) {
+      next(err);
+    }
+  });
 };

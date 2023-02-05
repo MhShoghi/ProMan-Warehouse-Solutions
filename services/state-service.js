@@ -1,4 +1,4 @@
-const errorMessages = require("../config/errorMessages");
+const errorMessages = require("../config/languages/errorMessages-en");
 const { StateRepository, CityRepository } = require("../database");
 const { CustomError } = require("../utils/app-errors");
 

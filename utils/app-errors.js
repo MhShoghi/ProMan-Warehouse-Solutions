@@ -1,4 +1,4 @@
-const errorMessages = require("../config/errorMessages");
+const errorMessages = require("../config/languages/errorMessages-en");
 
 const STATUS_CODE = {
   OK: 200,
@@ -123,13 +123,17 @@ class PasswordMismatchError extends AppError {
 }
 
 class CustomError extends AppError {
-  constructor(message, statusCode = 400) {
+  constructor(message, statusCode = 400, err = null) {
     super(message, statusCode);
     this.statusCode = statusCode;
+    this.error = err;
   }
 
   serializeErrors() {
-    return { message: this.message };
+    return {
+      message: this.message,
+      ...(this.error && { content: this.error }),
+    };
   }
 }
 

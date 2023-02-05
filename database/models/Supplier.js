@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Product = require("./Product");
 const Schema = mongoose.Schema;
 
 const SupplierSchema = new Schema(
@@ -17,5 +18,9 @@ const SupplierSchema = new Schema(
     versionKey: false,
   }
 );
+
+SupplierSchema.pre("remove", async function () {
+  await Product.updateMany({ supplier: this._id }, { supplier: null });
+});
 
 module.exports = mongoose.model("Supplier", SupplierSchema);

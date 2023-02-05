@@ -1,66 +1,82 @@
-const { APIError, STATUS_CODE } = require("../../utils/app-errors");
+const {
+  APIError,
+  STATUS_CODE,
+  CustomError,
+} = require("../../utils/app-errors");
 const { UserModel } = require("../models");
-const moment = require("moment");
 const { addMinutes } = require("date-fns");
+const { SelectField } = require("../../utils");
+
+const errorMessages = require("../../config/languages/errorMessages-en");
 class UserRepository {
   /**
    * @desc Create User Method / register
    * @method Private
    * @param sdfsdfsdf
    */
-  async CreateUser({
-    first_name,
-    last_name,
-    phone,
-    status,
-    username,
-    email,
-    password,
-    address,
-    roles,
-    salt,
-  }) {
+  async CreateUser(input) {
     try {
       const user = new UserModel({
-        password,
-        salt,
-        first_name,
-        last_name,
-        phone,
-        status,
-        username,
-        email,
-        address,
-        roles,
+        first_name: input.first_name,
+        last_name: input.last_name,
+        password: input.password,
+        salt: input.salt,
+        phone: input.phone,
+        status: input.status,
+        username: input.username,
+        email: input.email,
+        address: input.address,
+        role: input.role,
       });
 
-      const userResult = await user.save();
-      return userResult;
+      return await user.save();
     } catch (err) {
-      console.log(err.message);
-      throw new APIError("Unable to create user");
+      throw new CustomError(errorMessages.UNABLE_TO_CREATE("user"));
     }
   }
 
-  async RemoveUser() {}
-
-  async UpdateUser() {}
-
-  async GetUsers() {
+  async RemoveUser(userId) {
     try {
-      const users = await UserModel.find().select("-password -__v").lean();
-
-      return users;
+      // FIXME: fix this to return something like username or anything
+      await UserModel.findByIdAndDelete(userId);
     } catch (err) {
-      throw new APIError("Unable to get users");
+      throw new CustomError(errorMessages.UNABLE_TO_DELETE("user"));
     }
   }
 
-  async UpdateUser(id, updates) {
+  async UpdateUserById(userId, updates) {
     try {
-      return await UserModel.findOneAndUpdate(id, updates, { new: true });
+      return await UserModel.findByIdAndUpdate(userId, updates, {
+        new: true,
+      });
     } catch (err) {
-      throw new APIError("Unable to update user");
+      throw new CustomError(errorMessages.UNABLE_TO_UPDATE("user"));
+    }
+  }
+
+  async UpdateUser(query, updates) {
+    try {
+      return await UserModel.findOneAndUpdate(query, updates, { new: true });
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_UPDATE("users"));
+    }
+  }
+
+  async GetUsers(
+    filters,
+    select = SelectField(["password", "refreshToken", "salt", "otp"])
+  ) {
+    try {
+      const users = await UserModel.find()
+        .select(select)
+        .limit(filters.limit)
+        .skip(filters.startIndex);
+
+      const total = await UserModel.countDocuments();
+
+      return { users, total };
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_GET("users"));
     }
   }
 
@@ -148,10 +164,6 @@ class UserRepository {
     }
   }
 
-  async FindUserByName() {}
-
-  async FindUserByStatus() {}
-
   async AddRefreshTokenToUser(email, refreshToken) {
     try {
       return await UserModel.findOneAndUpdate(
@@ -168,10 +180,6 @@ class UserRepository {
       );
     }
   }
-
-  async AddProduct() {}
-
-  async RemoveProduct() {}
 
   async GetFieldByKeyValue(key, value, field) {
     console.log(key, value);

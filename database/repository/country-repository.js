@@ -1,4 +1,9 @@
-const { APIError, STATUS_CODE } = require("../../utils/app-errors");
+const { errorMessages } = require("../../config/languages");
+const {
+  APIError,
+  STATUS_CODE,
+  CustomError,
+} = require("../../utils/app-errors");
 const { CountryModel, ProvinceModel, CityModel } = require("../models");
 
 class CountryRepository {
@@ -18,9 +23,13 @@ class CountryRepository {
   }
 
   async GetCountryById(countryId) {
-    const country = await CountryModel.findById(countryId);
+    try {
+      const country = await CountryModel.findById(countryId);
 
-    return country;
+      return country;
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_GET("country"), 500);
+    }
   }
 
   async GetCountries() {
