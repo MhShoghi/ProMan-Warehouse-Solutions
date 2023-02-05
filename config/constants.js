@@ -17,3 +17,10 @@ module.exports.TRANSFER_STATUS = {
   EXECUTED: "executed",
   REJECTED: "rejected",
 };
+
+module.exports.TRANSFER_TYPES = {
+  STATIC_TO_STATIC: "Static-Static",
+  STATIC_TO_PORTABLE: "Static-Portable",
+  PORTABLE_TO_STATIC: "Portable-Static",
+  PORTABLE_TO_PORTABLE: "Portable-Portable",
+};

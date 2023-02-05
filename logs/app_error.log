@@ -205,3 +205,19 @@
 {"level":"error","message":"status: 400 - message: Invalid request parameters - date: Sun Feb 05 2023 03:45:30 GMT-0800 (Pacific Standard Time)"}
 {"level":"error","message":"status: 400 - message: Warehouse not found! - date: Sun Feb 05 2023 03:46:06 GMT-0800 (Pacific Standard Time)"}
 {"level":"error","message":"status: 400 - message: Warehouse not found! - date: Sun Feb 05 2023 03:46:15 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Warehouse not found! - date: Sun Feb 05 2023 09:53:03 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Sun Feb 05 2023 09:58:51 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Unable to create Product - date: Sun Feb 05 2023 10:01:44 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: product validation failed: status: `true` is not a valid enum value for path `status`. - date: Sun Feb 05 2023 10:02:22 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Sun Feb 05 2023 10:02:58 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Invalid request parameters - date: Sun Feb 05 2023 10:22:04 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to delete product - date: Sun Feb 05 2023 10:47:24 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to delete product - date: Sun Feb 05 2023 10:48:10 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to delete product - date: Sun Feb 05 2023 10:49:29 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 500 - message: Unable to delete product - date: Sun Feb 05 2023 10:51:17 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Unable to get supplier - date: Sun Feb 05 2023 11:47:55 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Unable to get supplier - date: Sun Feb 05 2023 11:48:48 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Unable to get supplier - date: Sun Feb 05 2023 11:49:50 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Unable to get supplier - date: Sun Feb 05 2023 11:51:35 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Unable to get supplier - date: Sun Feb 05 2023 11:52:13 GMT-0800 (Pacific Standard Time)"}
+{"level":"error","message":"status: 400 - message: Supplier ID is not valid - date: Sun Feb 05 2023 12:00:59 GMT-0800 (Pacific Standard Time)"}

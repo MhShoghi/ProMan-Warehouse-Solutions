@@ -38,6 +38,8 @@ const errorMessages = {
   CITY_NOT_FOUND: "City not found.",
 
   CATEGORY_NOT_FOUND: "Category Not Found!",
+
+  SUPPLIER_ID_IS_NOT_VALID: "Supplier ID is not valid",
 };
 
 module.exports = errorMessages;

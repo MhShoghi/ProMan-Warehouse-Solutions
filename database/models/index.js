@@ -10,4 +10,5 @@ module.exports = {
   CategoryModel: require("./Category"),
   ActivityModel: require("./Activity"),
   UnitOfMeasurement: require("./UnitOfMeasurement"),
+  TransferModel: require("./Transfer"),
 };

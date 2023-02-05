@@ -1,3 +1,4 @@
+const { errorMessages } = require("../../config/languages");
 const { APIError, CustomError } = require("../../utils/app-errors");
 const { ProductModel } = require("../models");
 
@@ -9,7 +10,7 @@ class ProductRepository {
         description: product.description,
         unit: product.unit,
         category: product.category,
-        status: product.status ?? false,
+        status: product.status,
         supplier: product.supplier,
         photo: product.photo,
       });
@@ -17,12 +18,15 @@ class ProductRepository {
       const productResult = await savedProduct.save();
       return productResult;
     } catch (err) {
-      throw new CustomError("Unable to create Product");
+      throw new CustomError(
+        errorMessages.UNABLE_TO_CREATE("product"),
+        500,
+        err.message
+      );
     }
   }
 
   async GetProducts(filter) {
-    console.log(filter);
     try {
       const products = await ProductModel.find()
         .limit(filter.limit)
@@ -53,6 +57,41 @@ class ProductRepository {
       return products;
     } catch (err) {
       throw APIError("Unable to Find Product");
+    }
+  }
+
+  async UpdateProduct(productId, input) {
+    try {
+      return await ProductModel.findByIdAndUpdate(
+        productId,
+        {
+          $set: input,
+        },
+        { new: true }
+      );
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_UPDATE("product"));
+    }
+  }
+
+  async DeleteProduct(productId) {
+    try {
+      return await ProductModel.findOneAndDelete({ _id: productId });
+    } catch (err) {
+      throw new CustomError(
+        errorMessages.UNABLE_TO_DELETE("product"),
+        500,
+        err.message
+      );
+    }
+  }
+
+  async FindProductsByCondition(condition) {
+    console.log(condition);
+    try {
+      return ProductModel.find(condition);
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_GET("product"));
     }
   }
 }

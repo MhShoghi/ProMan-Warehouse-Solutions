@@ -11,4 +11,5 @@ module.exports = {
   CategoryRepository: require("./repository/category-repository"),
   ActivityRepository: require("./repository/activity-repository"),
   UnitOfMeasurementRepository: require("./repository/unit-of-measurement-repository"),
+  TransferRepository: require("./repository/transfer-repository"),
 };

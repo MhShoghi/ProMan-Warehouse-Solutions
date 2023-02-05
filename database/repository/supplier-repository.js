@@ -23,6 +23,7 @@ class SupplierRepository {
     try {
       return await SupplierModel.findById(supplierId);
     } catch (err) {
+      console.log(err);
       throw new CustomError(errorMessages.UNABLE_TO_GET("supplier"));
     }
   }

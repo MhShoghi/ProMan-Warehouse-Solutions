@@ -4,7 +4,7 @@ const {
   CategoryRepository,
   SupplierRepository,
 } = require("../database");
-const { FormateData } = require("../utils");
+const { FormateData, IsValidObjectID } = require("../utils");
 const { CustomError } = require("../utils/app-errors");
 
 class ProductService {
@@ -47,6 +47,44 @@ class ProductService {
   }
 
   async TransferProductToWarehouse() {}
+
+  async UpdateProductById(productId, inputs) {
+    // Check category ID is exist or not
+    const category = await this.categoryRepository.FindCategoryById(
+      inputs.category
+    );
+    if (!category) throw new CustomError(errorMessages.CATEGORY_NOT_FOUND);
+
+    // Check supplier Id is exist or not
+    const supplier = await this.supplierRepository.FindSupplierById(
+      inputs.supplier
+    );
+    if (!supplier) throw new CustomError(errorMessages.SUPPLIER_NOT_FOUND);
+
+    // Create new product
+    return await this.repository.UpdateProduct(productId, inputs);
+  }
+
+  async DeleteProductById(productId) {
+    return await this.repository.DeleteProduct(productId);
+  }
+
+  async GetProductsBySupplier(supplierId) {
+    // Check supplier id is valid or not
+    if (!IsValidObjectID(supplierId))
+      throw new CustomError(errorMessages.SUPPLIER_ID_IS_NOT_VALID);
+    // Check supplier is exist
+    const supplier = await this.supplierRepository.FindSupplierById(supplierId);
+
+    console.log(supplier);
+    if (!supplier) throw new CustomError(errorMessages.SUPPLIER_NOT_FOUND);
+
+    return await this.repository.FindProductsByCondition({
+      supplier: supplier._id,
+    });
+
+    // throw error
+  }
 }
 
 module.exports = ProductService;

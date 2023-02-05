@@ -2,11 +2,6 @@ const { body, param } = require("express-validator");
 const ValidateRequest = require("../middlewares/validate-request");
 
 const AddOrUpdateSupplierValidator = [
-  param("supplierId")
-    .notEmpty()
-    .withMessage("Supplier ID is required")
-    .isMongoId()
-    .withMessage("Supplier ID must be an ID"),
   body("name", "supplier name field is required")
     .isString()
     .withMessage("Supplier name can not be null"),

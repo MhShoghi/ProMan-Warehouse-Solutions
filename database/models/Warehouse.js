@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { WAREHOUSE_STATUS } = require("../../config/constants");
-const Product = require("./Product");
+
 const Schema = mongoose.Schema;
 
 const WarehouseSchema = new Schema(
@@ -70,7 +70,6 @@ const WarehouseSchema = new Schema(
     toJSON: {
       transform(doc, ret) {
         delete ret.password;
-        delete ret.__v;
       },
     },
     timestamps: true,

@@ -17,6 +17,14 @@ const CreateProductValidator = [
   body("supplier")
     .isMongoId()
     .withMessage(errorMessages.INCORRECT_FIELD("supplier")),
+
+  body("photo")
+    .isString()
+    .withMessage(errorMessages.INCORRECT_FIELD("Photo url")),
+
+  body("status")
+    .isString()
+    .withMessage(errorMessages.INCORRECT_FIELD("status")),
   (req, res, next) => {
     ValidateRequest(req, res, next);
   },
@@ -38,4 +46,35 @@ const CreateUnitOfMeasurementValidator = [
   },
 ];
 
-module.exports = { CreateProductValidator, CreateUnitOfMeasurementValidator };
+const UpdateProductValidator = [
+  body("name").isString().withMessage("Product name must be entered"),
+  body("description").isString().optional({ nullable: true }),
+  body("category")
+    .isMongoId()
+    .withMessage(errorMessages.REQUIRED_FIELD("'category'")),
+  body("unit")
+    .notEmpty()
+    .withMessage(errorMessages.REQUIRED_FIELD("unit"))
+    .isMongoId()
+    .withMessage(errorMessages.INCORRECT_FIELD("unit")),
+
+  body("supplier")
+    .isMongoId()
+    .withMessage(errorMessages.INCORRECT_FIELD("supplier")),
+
+  body("photo")
+    .isString()
+    .withMessage(errorMessages.INCORRECT_FIELD("Photo url")),
+
+  body("status")
+    .isString()
+    .withMessage(errorMessages.INCORRECT_FIELD("status")),
+  (req, res, next) => {
+    ValidateRequest(req, res, next);
+  },
+];
+module.exports = {
+  CreateProductValidator,
+  CreateUnitOfMeasurementValidator,
+  UpdateProductValidator,
+};

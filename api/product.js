@@ -1,6 +1,11 @@
 const ProductService = require("../services/product-service");
 const UnitOfMeasurementService = require("../services/unit-of-measurement-service");
-const { Response, GetFilters, GetPagination } = require("../utils");
+const {
+  Response,
+  GetFilters,
+  GetPagination,
+  IsValidObjectID,
+} = require("../utils");
 const { ProductValidator } = require("./validator");
 
 module.exports = (app) => {
@@ -48,10 +53,42 @@ module.exports = (app) => {
   });
 
   // Update a specific product based on id
-  app.put("/products/:productId", async (req, res, next) => {});
+  app.put(
+    "/products/:productId",
+    ProductValidator.UpdateProductValidator,
+    async (req, res, next) => {
+      const productId = req.params.productId;
+      try {
+        const updatedProduct = await Service.UpdateProductById(
+          productId,
+          req.body
+        );
+
+        Response(res, "Update product", updatedProduct, null, 200);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
 
   // Delete a specific product based on id
-  app.delete("/products/:productId", async (req, res, next) => {});
+  app.delete("/products/:productId", async (req, res, next) => {
+    const productId = req.params.productId;
+    try {
+      const deletedProduct = await Service.DeleteProductById(productId);
+
+      console.log(deletedProduct);
+      Response(
+        res,
+        "Delete product successfully",
+        { _id: deletedProduct._id, name: deletedProduct.name },
+        null,
+        200
+      );
+    } catch (err) {
+      next(err);
+    }
+  });
 
   // Create a new Unit of Measurement for product
   app.post(
@@ -92,4 +129,16 @@ module.exports = (app) => {
     "/products/unit-of-measurements/:unitId",
     async (req, res, next) => {}
   );
+  //
+  app.get("/products/by-supplier/:supplierId", async (req, res, next) => {
+    const supplierId = req.params.supplierId;
+
+    try {
+      const products = await Service.GetProductsBySupplier(supplierId);
+
+      Response(res, "Get products by supplier", products, null, 200);
+    } catch (err) {
+      next(err);
+    }
+  });
 };

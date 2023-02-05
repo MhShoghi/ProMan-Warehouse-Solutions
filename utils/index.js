@@ -1,6 +1,7 @@
 // External libraries
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const { differenceInSeconds } = require("date-fns");
 
 // Internal libraries
@@ -201,4 +202,8 @@ module.exports.JWTPayload = (user, type) => {
     ...(role && role),
     ...(email && email),
   };
+};
+
+module.exports.IsValidObjectID = (string) => {
+  return mongoose.Types.ObjectId.isValid(string);
 };
