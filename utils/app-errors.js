@@ -132,7 +132,7 @@ class CustomError extends AppError {
   serializeErrors() {
     return {
       message: this.message,
-      ...(this.error && { content: this.error }),
+      ...(this.error && { body: this.error }),
     };
   }
 }

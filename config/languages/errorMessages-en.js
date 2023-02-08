@@ -13,6 +13,7 @@ const errorMessages = {
   NOT_FOUND: (field) => `${field} not found.`,
   QUERY_PARAM_NOT_FOUND: (field) => `${field} parameters not found.`,
   IS_NOT_VALID: (field) => `${field} is not valid`,
+  MUST_BE: (field, type) => `${field} must be a/an ${type}`,
 
   // AUTH
   UNAUTHORIZED: "You are not allowed to do this.",

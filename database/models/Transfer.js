@@ -20,16 +20,15 @@ const transferSchema = new Schema(
       type: String,
       enum: [
         TRANSFER_STATUS.PENDING,
-        TRANSFER_STATUS.APPROVED,
-        TRANSFER_STATUS.EXECUTED,
+        TRANSFER_STATUS.COMPLETED,
         TRANSFER_STATUS.REJECTED,
       ],
       default: TRANSFER_STATUS.PENDING,
     },
     products: [
       {
-        product: { type: mongoose.SchemaTypes.ObjectId, ref: "product" },
-        unit: String,
+        productId: { type: mongoose.SchemaTypes.ObjectId, ref: "product" },
+        unitId: String,
         quantity: Number,
       },
     ],

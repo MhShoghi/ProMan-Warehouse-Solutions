@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { USERT_TYPES } = require("../../config/constants");
+const PortableWarehouseSchema = require("./PortableWarehouse");
 
 const Schema = mongoose.Schema;
 
@@ -45,8 +47,13 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["admin", "operator", "manager", "technician"],
-      default: "operator",
+      enum: [
+        USERT_TYPES.ADMIN,
+        USERT_TYPES.MANAGER,
+        USERT_TYPES.OPERATOR,
+        USERT_TYPES.TECHNICIAN,
+      ],
+      default: USERT_TYPES.OPERATOR,
     },
 
     bio: {
@@ -54,16 +61,8 @@ const UserSchema = new Schema(
       maxLength: 1000,
     },
     warehouse: {
-      name: {
-        type: String,
-      },
-      products: [
-        {
-          product: { type: Schema.Types.ObjectId, ref: "product" },
-          unit: { type: String },
-          Quantity: { type: Number },
-        },
-      ],
+      type: PortableWarehouseSchema,
+      default: {},
     },
     projects: [
       {

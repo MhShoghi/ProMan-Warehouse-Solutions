@@ -70,17 +70,24 @@ const UpdateWarehouseValidation = [
     .isMongoId()
     .withMessage(errorMessages.REQUIRED_PARAMETER("warehouse ID")),
   (req, res, next) => {
-    ValidateRequest(req);
+    ValidateRequest(req, res, next);
   },
 ];
 
 const TransferProductValidation = [
-  body("from"),
-  body("to"),
-  body("items"),
-  body("type"),
+  body("from")
+    .isMongoId()
+    .withMessage(errorMessages.INCORRECT_FIELD("'Origin Warehouse")),
+  body("to")
+    .isMongoId()
+    .withMessage(errorMessages.INCORRECT_FIELD("'Destination Warehouse")),
+  body("items").isArray().withMessage(errorMessages.INCORRECT_FIELD('"items"')),
+  body("items.*")
+    .isObject()
+    .withMessage(errorMessages.MUST_BE("item", "object of product")),
+
   (req, res, next) => {
-    ValidateRequest(req);
+    ValidateRequest(req, res, next);
   },
 ];
 

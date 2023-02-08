@@ -7,14 +7,12 @@ module.exports.WAREHOUSE_STATUS = {
 
 /**
  * Pending: This means that the transfer has been initiated but not yet completed.
- * Approved: This means that the transfer has been approved and is ready to be executed.
- * Executed: This means that the transfer has been completed and the product has been moved from the source warehouse to the destination warehouse.
+ * COMPLETED: This means that the transfer has been completed and the product has been moved from the source warehouse to the destination warehouse.
  * Rejected: This means that the transfer has been rejected and will not be executed.
  */
 module.exports.TRANSFER_STATUS = {
   PENDING: "pending",
-  APPROVED: "approved",
-  EXECUTED: "executed",
+  COMPLETED: "completed",
   REJECTED: "rejected",
 };
 
@@ -24,4 +22,16 @@ module.exports.TRANSFER_TYPES = {
   PORTABLE_TO_STATIC: "Portable-Static",
   PORTABLE_TO_PORTABLE: "Portable-Portable",
   SUPPLIER_TO_STATIC: "Supplier-Static",
+};
+
+module.exports.UPDATE_PRODUCT_STOCK_TYPE = {
+  INCREMENT: "increment",
+  DECREMENT: "decrement",
+};
+
+module.exports.USERT_TYPES = {
+  ADMIN: "admin",
+  OPERATOR: "operator",
+  MANAGER: "manager",
+  TECHNICIAN: "technician",
 };

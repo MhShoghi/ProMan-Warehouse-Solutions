@@ -43,6 +43,18 @@ class TransferRepository {
       throw new CustomError(errorMessages.UNABLE_TO_GET("transfer"));
     }
   }
+
+  async UpdateTransfer(transferId, inputs) {
+    try {
+      return await TransferModel.findOneAndUpdate(
+        transferId,
+        { $set: inputs },
+        { new: true }
+      );
+    } catch (err) {
+      Error({ message: err.message, status: err.statusCode, err: err });
+    }
+  }
 }
 
 module.exports = TransferRepository;

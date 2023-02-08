@@ -9,7 +9,7 @@ const ProjectSchema = new Schema({
   owner: {
     type: String,
   },
-  operator: { type: Schema.Types.ObjectId, ref: "User" },
+  assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
   description: {
     type: String,
     require: true,
@@ -32,7 +32,6 @@ const ProjectSchema = new Schema({
       ref: "Product",
     },
   ],
-
   documents: [
     {
       name: String,

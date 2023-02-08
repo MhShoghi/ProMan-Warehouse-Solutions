@@ -54,7 +54,8 @@ const ErrorHandler = async (err, req, res, next) => {
         "Error",
         null,
         err.serializeErrors(),
-        err.statusCode
+        err.statusCode,
+        err.message
       );
     }
     return Response(res, "Something went wrong", null, err.message, 500);

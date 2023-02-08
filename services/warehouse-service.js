@@ -1,6 +1,9 @@
+const ProductService = require("./product-service");
+const TransferService = require("./transfer-service");
+const UserService = require("./user-service");
+
 const {
   WarehouseRepository,
-  UserRepository,
   CountryRepository,
   ProductRepository,
 } = require("../database");
@@ -8,10 +11,12 @@ const { APIError, CustomError } = require("../utils/app-errors");
 const { FormateData, Error } = require("../utils");
 const errorMessages = require("../config/languages/errorMessages-en");
 
-const ProductService = require("./product-service");
-const TransferService = require("./transfer-service");
 const { WarehouseModel } = require("../database/models");
-const { TRANSFER_TYPES, TRANSFER_STATUS } = require("../config/constants");
+const {
+  TRANSFER_TYPES,
+  TRANSFER_STATUS,
+  UPDATE_PRODUCT_STOCK_TYPE,
+} = require("../config/constants");
 const { default: mongoose } = require("mongoose");
 
 // All Business Logic will be here
@@ -23,6 +28,7 @@ class WarehouseService {
 
     this.productService = new ProductService();
     this.transferService = new TransferService();
+    this.userService = new UserService();
   }
 
   async CreateWarehouse(inputs) {
@@ -82,7 +88,7 @@ class WarehouseService {
       throw new CustomError(errorMessages.WAREHOUSE_NOT_FOUND);
 
     // Response to Route API
-    return FormateData(warehouseResult);
+    return warehouseResult;
   }
 
   async UpdateWarehouseById(warehouseId, inputs) {
@@ -105,25 +111,138 @@ class WarehouseService {
   }
 
   async TransferProduct(input) {
-    // Get body from input
-    const { from, to, items } = input;
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      // Get body from input
+      const { from, to, items } = input;
 
-    // Retrieve the source warehouse where the product is currently stored, whether it's a fixed warehouse or a portable warehouse.
+      // New transfer
 
-    // Check if the product exists in the source warehouse and if it has enough units to be transferred.
+      const transfer = await this.transferService.NewTransfer({
+        products: items,
+        from,
+        to,
+        status: TRANSFER_STATUS.PENDING,
+        type: TRANSFER_TYPES.STATIC_TO_STATIC,
+      });
 
-    // Create a transfer object to keep track of the transfer details, including the source and target warehouses, the product being transferred, the number of units being transferred, the date of transfer, and a unique transfer ID.
+      if (from === to)
+        Error({
+          message:
+            "The specifications of the origin and destination warehouse cannot be the same",
+          status: 400,
+          err: {
+            origin: from,
+            destination: to,
+          },
+        });
 
-    // Update the source warehouse by subtracting the number of units being transferred from the product's total units.
+      // Retrieve the source warehouse where the product is currently stored, whether it's a fixed warehouse or a portable warehouse.
 
-    // Update the target warehouse by adding the number of units being transferred to the product's total units or creating a new product entry if it doesn't already exist.
+      const sourceWarehouse = await this.CheckWarehouseAvailability(
+        from,
+        session
+      );
+      const destinationWarehouse = await this.CheckWarehouseAvailability(
+        to,
+        session
+      );
 
-    // Save the transfer object.
+      // Check all products in items is exist or not
+      // Check if the product exists in the source warehouse and if it has enough units to be transferred.
+      for (const { productId, unitId, quantity } of items) {
+        const product = this.ProductExists(sourceWarehouse, productId);
 
-    // Return the updated source and target warehouses and the transfer object as a result of the method.
+        if (!product)
+          return Error({
+            message: `Product with ID ${productId} not found in the warehouse ${from}`,
+            status: 404,
+            err: { productId },
+          });
+
+        if (Number(product.quantity) < Number(quantity)) {
+          return Error({
+            message: `Not enough quantity of product ${productId} in the warehouse`,
+            status: 404,
+            err: { quantity },
+          });
+        }
+
+        const { success } = await this.repository.UpdateProductStock(
+          sourceWarehouse,
+          UPDATE_PRODUCT_STOCK_TYPE.DECREMENT,
+          product,
+          quantity,
+          session
+        );
+
+        const productDestinationWarehouse = this.ProductExists(
+          destinationWarehouse,
+          productId
+        );
+
+        // If the product is not in stock, a product must be added
+        if (!Boolean(productDestinationWarehouse) && success) {
+          await this.repository.AddProduct(
+            destinationWarehouse,
+            productId,
+            unitId,
+            quantity,
+            session
+          );
+        }
+        if (Boolean(productDestinationWarehouse) && success) {
+          // If the product was in stock, the product inventory should be increased
+          await this.repository.UpdateProductStock(
+            destinationWarehouse,
+            UPDATE_PRODUCT_STOCK_TYPE.INCREMENT,
+            productDestinationWarehouse,
+            quantity,
+            session
+          );
+        }
+      }
+
+      await session.commitTransaction();
+
+      await this.transferService.ChangeStatus(transfer._id, {
+        status: TRANSFER_STATUS.COMPLETED,
+      });
+
+      return {
+        message: "The products have been transferred successfully",
+        success: true,
+        data: {
+          from_warehouse: sourceWarehouse.name,
+          to_warehouse: destinationWarehouse.name,
+        },
+      };
+
+      // Create a transfer object to keep track of the transfer details, including the source and target warehouses, the product being transferred, the number of units being transferred, the date of transfer, and a unique transfer ID.
+
+      // Update the source warehouse by subtracting the number of units being transferred from the product's total units.
+
+      // Save the transfer object.
+
+      // Return the updated source and target warehouses and the transfer object as a result of the method.
+    } catch (err) {
+      await session.abortTransaction();
+      await this.transferService.ChangeStatus(transfer._id, {
+        status: TRANSFER_STATUS.REJECTED,
+      });
+
+      Error({
+        message: err.message,
+        status: err.statusCode,
+        err: err.error,
+      });
+    } finally {
+      await session.endSession();
+    }
   }
 
-  async CheckProductAvailability(warehouseId, productId) {
+  async CheckProductAvailability(warehouseId, productId, session = null) {
     let result = await WarehouseModel.findOne({
       _id: warehouseId,
       products: {
@@ -131,7 +250,7 @@ class WarehouseService {
           productId: productId,
         },
       },
-    });
+    }).session(session);
     return result ? result : false;
   }
 
@@ -156,8 +275,7 @@ class WarehouseService {
       await this.productService.CheckProductsAvailability(products, session);
 
       // Checking each product and adding it to the warehouse
-      for (let i = 0; i < products.length; i++) {
-        const { productId, unitId, quantity } = products[i];
+      for (const { productId, unitId, quantity } of products) {
         // Find the product using the product ID in the warehouse
         const product = this.ProductExists(warehouse, productId);
 
@@ -172,8 +290,9 @@ class WarehouseService {
           );
         } else {
           // If the product was in stock, the product inventory should be increased
-          await this.repository.UpdateStock(
+          await this.repository.UpdateProductStock(
             warehouse,
+            UPDATE_PRODUCT_STOCK_TYPE.INCREMENT,
             product,
             quantity,
             session
@@ -216,6 +335,60 @@ class WarehouseService {
   }
 
   async GetWarehouseByAddress() {}
+
+  async TransferProductToUser(warehouseId, receiverId, products) {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      const transfer = await this.transferService.NewTransfer({
+        products,
+        from: warehouseId,
+        to: receiverId,
+        type: TRANSFER_TYPES.STATIC_TO_PORTABLE,
+      });
+
+      const userId = await this.userService;
+      const warehouse = await this.CheckWarehouseAvailability(
+        warehouseId,
+        session
+      );
+
+      for (const { productId, unitId, quantity } of products) {
+        // Check product is exist in the warehouse
+        const product = this.ProductExists(warehouse, productId);
+        if (!products)
+          Error({
+            message: `Product with ID ${productId} not found in the warehouse ${warehouse.name}`,
+          });
+
+        // Check quantity
+        if (product.quantity < quantity)
+          Error({
+            message: `Not enough quantity of product ${productId} in the warehouse ${warehouse.name}`,
+          });
+      }
+
+      // Commit transaction
+      await this.transferService.ChangeStatus(
+        transfer,
+        TRANSFER_STATUS.COMPLETED,
+        session
+      );
+      await session.commitTransaction();
+    } catch (err) {
+      await session.abortTransaction();
+      await this.transferService.ChangeStatus(
+        transfer,
+        TRANSFER_STATUS.REJECTED,
+        session
+      );
+
+      Error({ message: err.message, status: err.statusCode, err });
+    } finally {
+      await session.endSession();
+    }
+  }
 }
 
 module.exports = WarehouseService;

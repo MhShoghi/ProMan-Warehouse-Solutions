@@ -1,3 +1,4 @@
+const { UPDATE_PRODUCT_STOCK_TYPE } = require("../../config/constants");
 const { errorMessages } = require("../../config/languages");
 const {
   APIError,
@@ -21,7 +22,7 @@ class WarehouseRepository {
           latitude: input.location.latitude,
           longitude: input.location.longitude,
         },
-        description: input.location.description,
+        description: input.description,
         photos: input.photos ?? [],
         logo: input.logo,
         manager: {
@@ -41,13 +42,14 @@ class WarehouseRepository {
       throw new CustomError(err.message, 500);
     }
   }
-  async FindWarehouse(filters) {
+  async FindWarehouse(filters, session = null) {
     const results = await WarehouseModel.find()
       .populate("products.product")
       .populate("products.unit")
       .populate("products.product.units")
       .limit(filters.limit)
-      .skip(filters.startIndex);
+      .skip(filters.startIndex)
+      .session(session);
 
     const total = await WarehouseModel.countDocuments();
 
@@ -110,10 +112,28 @@ class WarehouseRepository {
     return result;
   }
 
-  async UpdateStock(warehouse, product, quantity, session) {
-    product.quantity += quantity;
+  async UpdateProductStock(
+    warehouse,
+    type = UPDATE_PRODUCT_STOCK_TYPE.INCREMENT,
+    product,
+    quantity,
+    session
+  ) {
+    try {
+      type === UPDATE_PRODUCT_STOCK_TYPE.INCREMENT
+        ? (product.quantity += quantity)
+        : (product.quantity -= quantity);
 
-    await warehouse.save({ session: session });
+      await warehouse.save({ session: session });
+      return { success: true };
+    } catch (error) {
+      console.error(error);
+      Error({
+        message: "Update stock failed",
+        status: err.statusCode,
+        err: err.message,
+      });
+    }
   }
 }
 

@@ -78,6 +78,26 @@ module.exports = (app) => {
     }
   });
 
+  app.get("/warehouses/:warehouseId/products", async (req, res, next) => {
+    try {
+      const warehouseId = req.params.warehouseId;
+
+      const warehouse = await Service.GetWarehouseById(warehouseId);
+
+      Response(
+        res,
+        `Get products of warehouse ${warehouse._id}`,
+        {
+          products: warehouse.products,
+        },
+        null,
+        200
+      );
+    } catch (err) {
+      next(err);
+    }
+  });
+
   // Update a warehouse
   app.put(
     "/warehouses/:warehouseId",
@@ -119,18 +139,23 @@ module.exports = (app) => {
     }
   });
 
+  // Transfer product from warehouse to another warehouse
   app.post(
     "/warehouses/transfer",
     WarehouseValidator.TransferProductValidation,
     async (req, res, next) => {
       try {
-        const transfer = await Service.TransferProduct(req.body);
+        const { message, status, data } = await Service.TransferProduct(
+          req.body
+        );
+
+        Response(res, message, data, null, 200);
       } catch (err) {
         next(err);
       }
     }
   );
-
+  // Add products to warehouse
   app.post("/warehouses/:warehouseId/products", async (req, res, next) => {
     const warehouseId = req.params.warehouseId;
     const products = req.body.products;
@@ -151,4 +176,24 @@ module.exports = (app) => {
       next(err);
     }
   });
+
+  app.post(
+    "/warehouses/:warehouseId/transfer/:userId",
+    async (req, res, next) => {
+      const warehouseId = req.params.warehouseId;
+      const userId = req.params.userId;
+      const products = req.body.products;
+      try {
+        const { message, data } = await Service.TransferProductToUser(
+          warehouseId,
+          userId,
+          products
+        );
+
+        Response(res, message, data, null, 200);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
 };

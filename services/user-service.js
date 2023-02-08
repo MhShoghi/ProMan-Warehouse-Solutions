@@ -166,6 +166,10 @@ class UserService {
       );
     }
   }
+
+  async GetUserById(userId) {
+    return await this.repository.FindUserById(userId);
+  }
 }
 
 module.exports = UserService;
