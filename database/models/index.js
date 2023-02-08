@@ -9,6 +9,6 @@ module.exports = {
   SupplierModel: require("./Supplier"),
   CategoryModel: require("./Category"),
   ActivityModel: require("./Activity"),
-  UnitOfMeasurement: require("./UnitOfMeasurement"),
+  UnitOfMeasurementModel: require("./UnitOfMeasurement"),
   TransferModel: require("./Transfer"),
 };

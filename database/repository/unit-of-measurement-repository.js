@@ -1,11 +1,11 @@
 const { errorMessages } = require("../../config/languages");
 const { CustomError } = require("../../utils/app-errors");
-const { UnitOfMeasurement } = require("../models");
+const { UnitOfMeasurementModel } = require("../models");
 
 class UnitOfMeasurementRepository {
   async AddUnitOfMeasurement(inputs) {
     try {
-      const unit = new UnitOfMeasurement({
+      const unit = new UnitOfMeasurementModel({
         name: inputs.name,
         abbreviation: inputs.abbreviation,
       });
@@ -22,14 +22,21 @@ class UnitOfMeasurementRepository {
 
   async UnitsOfMeasurement() {
     try {
-      console.log("first");
-      return await UnitOfMeasurement.find();
+      return await UnitOfMeasurementModel.find();
     } catch (err) {
       throw new CustomError(
         errorMessages.UNABLE_TO_GET("Unit of Measurement"),
         500,
         err.message
       );
+    }
+  }
+
+  async FindUnitOfMeasurementById(unitId) {
+    try {
+      return await UnitOfMeasurementModel.findById(unitId);
+    } catch (err) {
+      throw new CustomError(errorMessages.UNABLE_TO_GET("unit of measurement"));
     }
   }
 }

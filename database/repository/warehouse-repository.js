@@ -43,6 +43,9 @@ class WarehouseRepository {
   }
   async FindWarehouse(filters) {
     const results = await WarehouseModel.find()
+      .populate("products.product")
+      .populate("products.unit")
+      .populate("products.product.units")
       .limit(filters.limit)
       .skip(filters.startIndex);
 
@@ -51,11 +54,11 @@ class WarehouseRepository {
     return { results, total };
   }
 
-  async FindWarehouseById({ id }) {
+  async FindWarehouseById(warehouseId, session = null) {
     try {
-      return WarehouseModel.findById(id);
+      return await WarehouseModel.findById(warehouseId).session(session);
     } catch (err) {
-      throw new APIError("Unable to get warehouse");
+      throw new CustomError(err.message);
     }
   }
 
@@ -89,6 +92,28 @@ class WarehouseRepository {
     } catch (err) {
       throw new CustomError(errorMessages.UNABLE_TO_DELETE("warehouse"));
     }
+  }
+
+  async AddProduct(warehouseId, productId, unitId, quantity, session = null) {
+    let result = await WarehouseModel.updateOne(
+      { _id: warehouseId },
+      {
+        $push: {
+          products: {
+            product: productId,
+            unit: unitId,
+            quantity: quantity,
+          },
+        },
+      }
+    ).session(session);
+    return result;
+  }
+
+  async UpdateStock(warehouse, product, quantity, session) {
+    product.quantity += quantity;
+
+    await warehouse.save({ session: session });
   }
 }
 

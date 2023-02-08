@@ -23,4 +23,5 @@ module.exports.TRANSFER_TYPES = {
   STATIC_TO_PORTABLE: "Static-Portable",
   PORTABLE_TO_STATIC: "Portable-Static",
   PORTABLE_TO_PORTABLE: "Portable-Portable",
+  SUPPLIER_TO_STATIC: "Supplier-Static",
 };

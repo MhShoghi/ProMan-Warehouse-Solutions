@@ -22,10 +22,12 @@ const ProductSchema = new Schema(
       ref: "category",
       required: true,
     },
-    unit: {
-      type: mongoose.SchemaTypes.ObjectId,
-      ref: "unit",
-    },
+    units: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "unit",
+      },
+    ],
     status: {
       type: String,
       required: true,

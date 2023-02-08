@@ -1,8 +1,15 @@
 const WarehouseService = require("../services/warehouse-service");
-const { Response } = require("../utils");
+const {
+  Response,
+  GetFilters,
+  GetPagination,
+  IsValidObjectID,
+} = require("../utils");
 const auth = require("../api/middlewares/auth");
 
 const { WarehouseValidator } = require("./validator");
+const { errorMessages } = require("../config/languages");
+const { CustomError } = require("../utils/app-errors");
 
 /**
  * /warehouse POST create warehouse
@@ -34,34 +41,16 @@ module.exports = (app) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    const startIndex = (page - 1) * 10;
-    const endIndex = page * limit;
-
-    const filters = { page, limit, startIndex, endIndex };
+    const filters = GetFilters(limit, page);
 
     const { total, results } = await Service.GetWarehouses(filters);
 
-    const pagination = {};
+    const pagination = GetPagination(filters, total);
 
-    if (endIndex < total) {
-      pagination.next = {
-        page: page + 1,
-        limit,
-      };
-    }
-
-    if (startIndex > 0) {
-      pagination.prev = {
-        page: page - 1,
-        limit,
-      };
-    }
-
-    return res.json({
-      success: true,
+    Response(res, "Get warehouses", {
       count: results.length,
       pagination,
-      data: results,
+      warehouses: results,
     });
   });
 
@@ -125,6 +114,39 @@ module.exports = (app) => {
         },
         200
       );
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  app.post(
+    "/warehouses/transfer",
+    WarehouseValidator.TransferProductValidation,
+    async (req, res, next) => {
+      try {
+        const transfer = await Service.TransferProduct(req.body);
+      } catch (err) {
+        next(err);
+      }
+    }
+  );
+
+  app.post("/warehouses/:warehouseId/products", async (req, res, next) => {
+    const warehouseId = req.params.warehouseId;
+    const products = req.body.products;
+
+    try {
+      // Check WarehouseId is valid Object ID
+      const isValid = IsValidObjectID(warehouseId);
+      if (!isValid)
+        throw new CustomError(errorMessages.IS_NOT_VALID("Warehouse ID"));
+
+      const message = await Service.AddProductsToWarehouse(
+        warehouseId,
+        products
+      );
+
+      Response(res, message, null, null, 201);
     } catch (err) {
       next(err);
     }

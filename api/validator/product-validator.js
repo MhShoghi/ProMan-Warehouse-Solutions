@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, check } = require("express-validator");
 const { errorMessages } = require("../../config/languages");
 const ValidateRequest = require("../middlewares/validate-request");
 
@@ -8,11 +8,13 @@ const CreateProductValidator = [
   body("category")
     .isMongoId()
     .withMessage(errorMessages.REQUIRED_FIELD("'category'")),
-  body("unit")
+
+  check("units")
     .notEmpty()
-    .withMessage(errorMessages.REQUIRED_FIELD("unit"))
-    .isMongoId()
-    .withMessage(errorMessages.INCORRECT_FIELD("unit")),
+    .withMessage(errorMessages.MINIMUM_REQUIRED_FIELD("Unit of measurement"))
+    .isArray()
+    .withMessage("Unit IDs must be an array"),
+  check("units.*").isMongoId().withMessage("Unit IDs must be a valid ID"),
 
   body("supplier")
     .isMongoId()

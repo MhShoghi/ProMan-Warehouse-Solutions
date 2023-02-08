@@ -8,7 +8,7 @@ class ProductRepository {
       const savedProduct = new ProductModel({
         name: product.name,
         description: product.description,
-        unit: product.unit,
+        units: product.units,
         category: product.category,
         status: product.status,
         supplier: product.supplier,
@@ -39,9 +39,9 @@ class ProductRepository {
     }
   }
 
-  async FindProductById(id) {
+  async FindProductById(id, { session = null }) {
     try {
-      return await ProductModel.findById(id);
+      return await ProductModel.findById(id).session(session);
     } catch (err) {
       throw APIError("Unable to get product");
     }
@@ -86,14 +86,55 @@ class ProductRepository {
     }
   }
 
-  async FindProductsByCondition(condition) {
-    console.log(condition);
+  async FindProductByCondition(condition) {
     try {
-      return ProductModel.find(condition);
+      return await ProductModel.findOne(condition);
     } catch (err) {
-      throw new CustomError(errorMessages.UNABLE_TO_GET("product"));
+      console.log(err);
+      throw new CustomError(
+        errorMessages.UNABLE_TO_GET(`product with condition ${condition[0]}`)
+      );
     }
   }
 }
 
 module.exports = ProductRepository;
+
+//   try {
+//     // Find the product in the products collection
+//     const eProduct = await this.productRepository.FindProductsByCondition(
+//       {
+//         _id: productId,
+//         units: { $in: [unitId] },
+//       }
+//     );
+
+//     if (!eProduct) {
+//       throw new CustomError(
+//         `Product with id ${productId} and unit ${unitId} not found in products`
+//       );
+//     }
+
+//     // Check if the product exists in the source warehouse
+//     warehouse.products.find;
+//     const isExist = warehouse.products.find(
+//       (p) => p.product._id.toString() === productId
+//     );
+
+//     if (isExist) {
+//       isExist.quantity += quantity;
+//       await warehouse.save();
+
+//       return;
+//     }
+
+//     warehouse.products.push({
+//       product: productId,
+//       unit: unitId,
+//       quantity,
+//     });
+//     await warehouse.save();
+//   } catch (err) {
+//     console.error(err);
+//     break;
+//   }

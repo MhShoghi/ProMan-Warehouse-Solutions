@@ -1,21 +1,24 @@
 const { errorMessages } = require("../../config/languages");
 const { CustomError } = require("../../utils/app-errors");
 const { TransferModel } = require("../models");
-
+const uuid = require("uuid");
 class TransferRepository {
-  async newTransfer(input) {
+  async AddTransfer({ products, from, to, type, status }) {
     try {
       const transfer = new TransferModel({
-        products: input.products,
-        fromWarehouse: input.fromWarehouse,
-        toWarehouse: input.toWarehouse,
-        type: input.type,
-        ...(input.status && { status: input.status }),
+        products,
+        from,
+        to,
+        type,
+        transferNumber: uuid.v4(),
+        ...(status && { status }),
       });
 
       return await transfer.save();
     } catch (err) {
-      throw new CustomError(errorMessages.UNABLE_TO_CREATE("transfer", 500));
+      throw new CustomError(
+        errorMessages.UNABLE_TO_CREATE("transfer", err.statusCode)
+      );
     }
   }
 

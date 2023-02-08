@@ -3,8 +3,9 @@ const {
   ProductRepository,
   CategoryRepository,
   SupplierRepository,
+  UnitOfMeasurementRepository,
 } = require("../database");
-const { FormateData, IsValidObjectID } = require("../utils");
+const { FormateData, IsValidObjectID, Error } = require("../utils");
 const { CustomError } = require("../utils/app-errors");
 
 class ProductService {
@@ -12,6 +13,7 @@ class ProductService {
     this.repository = new ProductRepository();
     this.categoryRepository = new CategoryRepository();
     this.supplierRepository = new SupplierRepository();
+    this.unitRepository = new UnitOfMeasurementRepository();
   }
 
   async CreateProduct(productInputs) {
@@ -27,6 +29,17 @@ class ProductService {
         productInputs.supplier
       );
       if (!supplier) throw new CustomError(errorMessages.SUPPLIER_NOT_FOUND);
+
+      for (const unitId of productInputs.units) {
+        const existUnit = await this.unitRepository.FindUnitOfMeasurementById(
+          unitId
+        );
+
+        if (!existUnit)
+          throw new CustomError(
+            errorMessages.NOT_FOUND(`Unit with ID ${unitId}`)
+          );
+      }
 
       // Create new product
       return await this.repository.CreateProduct(productInputs);
@@ -84,6 +97,47 @@ class ProductService {
     });
 
     // throw error
+  }
+
+  async CheckProductExistence(productId) {
+    try {
+      return await this.repository.FindProductById(productId);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async CheckProductsAvailability(items, session = null) {
+    try {
+      // Loop through each item in the items array
+      for (const item of items) {
+        const { productId, unitId } = item;
+
+        const product = await this.repository.FindProductById(
+          productId,
+          session
+        );
+        // Check if the product exists in the products
+        if (!product) {
+          Error({
+            message: `Product with id ${productId} and unit ${unitId} not found in products`,
+            status: 404,
+          });
+        }
+
+        const isUnitExist = product.units.find(
+          (unit) => unit.toString() === unitId
+        );
+        if (!isUnitExist) {
+          Error({
+            message: `The measurement unit ${unitId} does not belong to the product ${productId}`,
+            status: 404,
+          });
+        }
+      }
+    } catch (err) {
+      throw new CustomError(err.message);
+    }
   }
 }
 

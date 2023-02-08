@@ -8,13 +8,12 @@ const transferSchema = new Schema(
   {
     transferNumber: {
       type: String,
-      unique: true,
       default: uuid.v1(),
     },
-    fromWarehouse: {
+    from: {
       type: mongoose.SchemaTypes.ObjectId,
     },
-    toWarehouse: {
+    to: {
       type: mongoose.SchemaTypes.ObjectId,
     },
     status: {
@@ -37,6 +36,7 @@ const transferSchema = new Schema(
     type: {
       type: String,
       enum: [
+        TRANSFER_TYPES.SUPPLIER_TO_STATIC,
         TRANSFER_TYPES.STATIC_TO_STATIC,
         TRANSFER_TYPES.STATIC_TO_PORTABLE,
         TRANSFER_TYPES.PORTABLE_TO_STATIC,

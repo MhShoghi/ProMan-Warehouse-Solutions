@@ -74,4 +74,18 @@ const UpdateWarehouseValidation = [
   },
 ];
 
-module.exports = { createWarehouseValidation, UpdateWarehouseValidation };
+const TransferProductValidation = [
+  body("from"),
+  body("to"),
+  body("items"),
+  body("type"),
+  (req, res, next) => {
+    ValidateRequest(req);
+  },
+];
+
+module.exports = {
+  createWarehouseValidation,
+  UpdateWarehouseValidation,
+  TransferProductValidation,
+};

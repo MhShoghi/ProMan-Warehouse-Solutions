@@ -28,8 +28,8 @@ const WarehouseSchema = new Schema(
     products: [
       {
         product: { type: Schema.Types.ObjectId, ref: "product" },
-        unit: { type: Number, require: true },
-        qunatity: { type: Number },
+        unit: { type: Schema.Types.ObjectId, ref: "UnitOfMeasurement" },
+        quantity: { type: Number },
       },
     ],
     photos: [
@@ -67,11 +67,6 @@ const WarehouseSchema = new Schema(
   },
   {
     versionKey: false,
-    toJSON: {
-      transform(doc, ret) {
-        delete ret.password;
-      },
-    },
     timestamps: true,
   }
 );

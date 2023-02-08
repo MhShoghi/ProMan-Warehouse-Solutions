@@ -3,15 +3,16 @@ const { WAREHOUSE_STATUS } = require("../constants");
 const errorMessages = {
   // Common Errors
   REQUIRED_FIELD: (field) => `${field} is a required field.`,
+  MINIMUM_REQUIRED_FIELD: (field) => `At least one ${field} is required`,
   REQUIRED_PARAMETER: (param) => `${param} is a required parameter.`,
   INCORRECT_FIELD: (field) => `${field} field is not correct`,
   UNABLE_TO_CREATE: (field) => `Unable to create a ${field}`,
   UNABLE_TO_GET: (field) => `Unable to get ${field}`,
   UNABLE_TO_DELETE: (field) => `Unable to delete ${field}`,
   UNABLE_TO_UPDATE: (field) => `Unable to update ${field}`,
-
   NOT_FOUND: (field) => `${field} not found.`,
   QUERY_PARAM_NOT_FOUND: (field) => `${field} parameters not found.`,
+  IS_NOT_VALID: (field) => `${field} is not valid`,
 
   // AUTH
   UNAUTHORIZED: "You are not allowed to do this.",

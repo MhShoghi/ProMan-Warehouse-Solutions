@@ -207,3 +207,7 @@ module.exports.JWTPayload = (user, type) => {
 module.exports.IsValidObjectID = (string) => {
   return mongoose.Types.ObjectId.isValid(string);
 };
+
+module.exports.Error = ({ message, status, err }) => {
+  throw new CustomError(message, status, err);
+};
